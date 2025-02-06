@@ -1,7 +1,5 @@
 <script setup>
 
-import { ref, onMounted } from 'vue'
-
 const props = defineProps({
   cartIds: Array
 })
@@ -11,7 +9,7 @@ const props = defineProps({
  * 
  * @event removeFromCart
  */
-defineEmits(['removeFromCart']);
+defineEmits(['removeFromCart', 'IncrementAmount', 'DecrementAmount', 'removeAllCart']);
 
 
 </script>
@@ -20,18 +18,27 @@ defineEmits(['removeFromCart']);
   <h1>Carrito de la compra</h1>
   <table>
     <thead>
-        <td>Id</td>
-        <td>Cantidad</td> 
+        <th>Id</th>
+        <th>Nombre</th>
+        <th>Precio</th>
+        <th>Cantidad</th>
+        <th>Subtotal</th> 
         <th>Acciones</th>
     </thead>
     <tbody>
       <tr v-for="cartId in cartIds" :key="cartId.id">
         <td>{{ cartId.id }}</td>
-        <td>{{ cartId.amount }}</td>
+        <td>{{ cartId.name }}</td>
+        <td>{{ cartId.price }}</td>
+        <td> <button @click="$emit('IncrementAmount', cartId.id)">+ </button> <input type="number" v-model="cartId.amount"> <button @click="$emit('DecrementAmount', cartId.id)"> - </button></td>
+        <td>{{ (cartId.price * cartId.amount).toFixed(2) }}</td>
         <td><button @click="$emit('removeFromCart', cartId.id)">Eliminar</button></td>
       </tr> 
     </tbody>
   </table>
+  <p>
+    <button @click="$emit('removeAllCart')">Elimina Todo</button>
+  </p>
 </template>
 
 <style scoped>
